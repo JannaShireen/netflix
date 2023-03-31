@@ -11,6 +11,7 @@ class NumberTitleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final apiUrl = "https://api.themoviedb.org/3/movie/top_rated?api_key=b2dee3b855c4ea705ff5dda3c0201768&language=en-US&page=1";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

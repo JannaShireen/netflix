@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/core/constants.dart';
-import 'package:netflix_clone/presentation/widgets/app_bar_widget.dart';
+import 'package:netflix_clone/presentation/new_and_hot/widgets/coming_soon_widget.dart';
+import 'package:netflix_clone/presentation/new_and_hot/widgets/everyones_watching_widget.dart';
+
+
 
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
@@ -14,15 +17,15 @@ class ScreenNewAndHot extends StatelessWidget {
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(90),
             child: AppBar(
-              title: Text(
+              title: const Text(
                 "New & Hot",
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w900,
                 ),
               ),
               actions: [
-                Icon(
+               const  Icon(
                   Icons.cast,
                   color: Colors.white,
                   size: 30,
@@ -39,7 +42,7 @@ class ScreenNewAndHot extends StatelessWidget {
                 unselectedLabelColor: kWhiteColor,
                 labelColor: kBlackColor,
                 isScrollable: true,
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold),
                 indicator: BoxDecoration(
@@ -47,7 +50,7 @@ class ScreenNewAndHot extends StatelessWidget {
                   borderRadius: kRadius30,
                    ),
                 
-                tabs: [
+                tabs: const [
                 Tab(
                   text: "🍿Coming Soon",
                 ),
@@ -57,15 +60,37 @@ class ScreenNewAndHot extends StatelessWidget {
               ]),
             )),
         body: TabBarView(children: [
-          _buildTabBarView(),
-          _buildTabBarView
+          _buildComingSoon(),
+          _buildEveryonesWatching(),
 
-        ]),
+        ]
+        ),
       ),
     );
   }
-  _buildTabBarView(){
-    return 
+  
+   Widget _buildComingSoon() {
+    
+    return ListView.builder
+    (itemCount: 10,
+      itemBuilder: (BuildContext context, index) {
+      return const ComingSoonWidget();
+    }
+    );
+       
+      
+    
+
+   }
+  
+  _buildEveryonesWatching() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (BuildContext context, index) =>  const EveryonesWatchingWidget());
+
   }
+ 
   }
+
+
 

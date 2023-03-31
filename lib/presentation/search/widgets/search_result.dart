@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/presentation/search/widgets/title.dart';
 
-const imageUrl= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWWsVTjDaK9xTorMHSm6oxAll80fttPtDPkg&usqp=CAU";
+const imageUrl =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWWsVTjDaK9xTorMHSm6oxAll80fttPtDPkg&usqp=CAU";
 
 class SearchResultWidget extends StatelessWidget {
   const SearchResultWidget({super.key});
@@ -16,17 +17,17 @@ class SearchResultWidget extends StatelessWidget {
         kHeight,
         Expanded(
           child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 3,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          childAspectRatio: 1 / 1.4,
-          children: 
-          List.generate(20, (index) {
-            return const MainCard();
-          },
-
-          ),
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            mainAxisSpacing: 5,
+            crossAxisSpacing: 5,
+            childAspectRatio: 1 / 1.4,
+            children: List.generate(
+              20,
+              (index) {
+                return MainCard(imageUrlFromApi: imageUrl);
+              },
+            ),
           ),
         ),
       ],
@@ -35,7 +36,8 @@ class SearchResultWidget extends StatelessWidget {
 }
 
 class MainCard extends StatelessWidget {
-  const MainCard({super.key});
+  final String imageUrlFromApi;
+  const MainCard({super.key, required this.imageUrlFromApi});
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +45,8 @@ class MainCard extends StatelessWidget {
       height: 250,
       width: 150,
       decoration: BoxDecoration(
-        image: DecorationImage(image: NetworkImage(imageUrl),
-        fit: BoxFit.cover),
+        image: DecorationImage(
+            image: NetworkImage(imageUrlFromApi), fit: BoxFit.cover),
         borderRadius: BorderRadius.circular(7),
       ),
     );
