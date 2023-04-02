@@ -9,74 +9,72 @@ import 'package:http/http.dart' as http;
 
 import '../search/widgets/search_result.dart';
 
-class MainTitleCard extends StatefulWidget {
+class MainTitleCard extends StatelessWidget {
   const MainTitleCard({
     super.key,
     required this.title,
     required this.apiUrl,
   });
+
   final String title;
   final String apiUrl;
 
   @override
-  State<MainTitleCard> createState() => _MainTitleCardState();
-}
-
-class _MainTitleCardState extends State<MainTitleCard> {
-  @override
-  initState() {
-    super.initState();
-    apicall();
-    // Add listeners to this class
-  }
-
-  List<MovieInfoModel> movieInfos = [];
-  Future apicall() async {
-    http.Response response;
-    response = await http.get(Uri.parse(widget.apiUrl));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      TMDBApiResponseModel tmdbApiResponse =
-          TMDBApiResponseModel.fromJson(data);
-
-      setState(() {
-        imageList = tmdbApiResponse.results.map((MovieInfoModel movieInfo) {
-          if (movieInfo.posterPath == null) {
-            return null;
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: http.get(Uri.parse(apiUrl)),
+        builder: (context, AsyncSnapshot<http.Response> snapshot) {
+          if (!snapshot.hasData) {
+            return Text('Please wait');
           }
 
-          String imageUrl =
-              'https://image.tmdb.org/t/p/w500${movieInfo.posterPath}?api_key=b2dee3b855c4ea705ff5dda3c0201768';
-          return imageUrl;
-        }).toList();
-      });
-    }
-  }
+          if (snapshot.data == null) {
+            return Text('No data found');
+          }
 
-  List imageList = [];
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: MainTitle(
-            title: widget.title,
-          ),
-        ),
-        kHeight,
-        LimitedBox(
-          maxHeight: 200,
-          child: ListView.builder(
-            itemCount: imageList.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return MainCard(imageUrlFromApi: imageList[index]);
-            },
-          ),
-        ),
-      ],
-    );
+          List<MovieInfoModel> movieInfos = [];
+          List imageList = [];
+          http.Response response = snapshot.data!;
+          if (response.statusCode == 200) {
+            Map<String, dynamic> data = jsonDecode(response.body);
+            TMDBApiResponseModel tmdbApiResponse =
+                TMDBApiResponseModel.fromJson(data);
+
+            imageList = tmdbApiResponse.results.map((MovieInfoModel movieInfo) {
+              if (movieInfo.posterPath == null) {
+                return null;
+              }
+
+              String imageUrl =
+                  'https://image.tmdb.org/t/p/w500${movieInfo.posterPath}?api_key=b2dee3b855c4ea705ff5dda3c0201768';
+              return imageUrl;
+            }).toList();
+          }
+          if (imageList.isEmpty) {
+            return ListTile(title: Text('No $title'));
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MainTitle(
+                  title: title,
+                ),
+              ),
+              kHeight,
+              LimitedBox(
+                maxHeight: 200,
+                child: ListView.builder(
+                  itemCount: imageList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return MainCard(imageUrlFromApi: imageList[index]);
+                  },
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

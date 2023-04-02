@@ -17,20 +17,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-      appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
         primarySwatch: Colors.blue,
         colorScheme: const ColorScheme.dark(),
         scaffoldBackgroundColor: backgroundColor,
         fontFamily: GoogleFonts.montserrat().fontFamily,
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white), 
-
+          bodyMedium: TextStyle(color: Colors.white),
         ),
-        ),
-      home:  ScreenMainPage(),
+      ),
+      home: ScreenMainPage(),
     );
   }
 }
-
-
