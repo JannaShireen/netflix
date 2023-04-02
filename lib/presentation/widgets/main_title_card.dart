@@ -25,11 +25,11 @@ class MainTitleCard extends StatelessWidget {
         future: http.get(Uri.parse(apiUrl)),
         builder: (context, AsyncSnapshot<http.Response> snapshot) {
           if (!snapshot.hasData) {
-            return Text('Please wait');
+            return const Text('Please wait');
           }
 
           if (snapshot.data == null) {
-            return Text('No data found');
+            return const Text('No data found');
           }
 
           List<MovieInfoModel> movieInfos = [];
