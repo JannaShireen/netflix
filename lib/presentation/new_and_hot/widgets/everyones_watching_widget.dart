@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/core/constants.dart';
+import 'package:netflix_clone/models/tmdb_api_response.dart';
+import 'package:netflix_clone/presentation/new_and_hot/widgets/everyones_watching_info_card.dart';
 import 'package:netflix_clone/presentation/widgets/custom_button_widget.dart';
 import 'package:netflix_clone/presentation/widgets/video_widgets.dart';
+import 'package:http/http.dart' as http;
 
 class EveryonesWatchingWidget extends StatelessWidget {
   const EveryonesWatchingWidget({
@@ -11,55 +15,30 @@ class EveryonesWatchingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          kHeight,
-          const Text(
-            "Friends",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          kHeight,
-          const Text(
-            "This hit sitcom follows the merry misadventures of six  20-something pals as they navigate the pitfalls of work,life and love in 1990s Manhattan.",
-            style: TextStyle(color: kGreyColor),
-          ),
-          kHeight50,
-          VideoWidget(),
-          kHeight,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              CustomButtonWidget(
-                icon: Icons.share,
-                title: 'Share',
-                iconSize: 25,
-                textSize: 16,
-              ),
-              kWidth,
-              CustomButtonWidget(
-                icon: Icons.add,
-                title: 'My List',
-                iconSize: 25,
-                textSize: 16,
-              ),
-              kWidth,
-              CustomButtonWidget(
-                icon: Icons.play_arrow,
-                title: "Play",
-                iconSize: 25,
-                textSize: 16,
-              ),
-              kWidth,
-            ],
-          )
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: http.get(Uri.parse(
+            'https://api.themoviedb.org/3/movie/popular?api_key=b2dee3b855c4ea705ff5dda3c0201768&language=en-US&page=1')),
+        builder: (context, AsyncSnapshot<http.Response> snapshot) {
+          if (!snapshot.hasData) {
+            return const Text('Please wait');
+          }
+          if (snapshot.data == null) {
+            return const Text('No data found');
+          }
+          http.Response response = snapshot.data!;
+          if (response.statusCode == 200) {
+            Map<String, dynamic> data = jsonDecode(response.body);
+            TMDBApiResponseModel tmdbApiResponse =
+                TMDBApiResponseModel.fromJson(data);
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: tmdbApiResponse.results.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    EveryonesWatchingInfoCard(
+                        movieInfo: tmdbApiResponse.results[index]));
+          }
+
+          return Container();
+        });
   }
 }

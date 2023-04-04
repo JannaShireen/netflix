@@ -4,6 +4,7 @@ import 'package:netflix_clone/core/constants.dart';
 import 'package:netflix_clone/models/movie_info.dart';
 import 'package:netflix_clone/presentation/widgets/custom_button_widget.dart';
 import 'package:netflix_clone/presentation/widgets/video_widgets.dart';
+import 'package:intl/intl.dart';
 
 class ComingSoonInfoCard extends StatelessWidget {
   const ComingSoonInfoCard({super.key, required this.movieInfo});
@@ -11,6 +12,9 @@ class ComingSoonInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String imageUrl =
+        'https://image.tmdb.org/t/p/w500${movieInfo.posterPath}?api_key=b2dee3b855c4ea705ff5dda3c0201768';
+
     return Padding(
       padding: const EdgeInsets.only(top: 23.0),
       child: Row(
@@ -23,22 +27,14 @@ class ComingSoonInfoCard extends StatelessWidget {
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
-                  "FEB",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: kGreyColor,
-                  ),
+                  parseDateTime(movieInfo.releaseDate!),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      color: kWhiteColor,
+                      fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "11",
-                  style: TextStyle(
-                    fontSize: 30,
-                    letterSpacing: 4,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
               ],
             ),
           ),
@@ -47,32 +43,24 @@ class ComingSoonInfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                VideoWidget(),
+                VideoWidget(videoImage: imageUrl),
                 Row(
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "TALL GIRL 2",
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -5,
-                      ),
-                    ),
                     const Spacer(),
                     Row(
                       children: const [
                         CustomButtonWidget(
                           icon: Icons.alarm_rounded,
                           title: 'Remind me',
-                          iconSize: 20,
+                          iconSize: 17,
                           textSize: 12,
                         ),
                         kWidth,
                         CustomButtonWidget(
                           icon: Icons.info,
                           title: 'Info',
-                          iconSize: 20,
+                          iconSize: 17,
                           textSize: 12,
                         ),
                         kWidth,
@@ -81,18 +69,20 @@ class ComingSoonInfoCard extends StatelessWidget {
                   ],
                 ),
                 kHeight,
-                const Text("Coming on Friday"),
+                Text("Coming on ${getDayName(movieInfo.releaseDate!)}"),
                 kHeight,
                 Text(
-                  movieInfo.title ?? 'Empty Title',
-                  style: TextStyle(
-                    fontSize: 18,
+                  movieInfo.originalTitle ?? 'Empty Title',
+                  style: const TextStyle(
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: -1,
                   ),
                 ),
                 kHeight,
-                const Text(
-                  "Landing the lead in the school musical is a dream come for Jodi, until the pressure sends her confidence - and her relaionship- into a tailspin.",
+                Text(
+                  movieInfo.overview ?? 'Empty Description',
+                  //"Landing the lead in the school musical is a dream come for Jodi, until the pressure sends her confidence - and her relaionship- into a tailspin.",
                   style: TextStyle(color: kGreyColor),
                 ),
                 kHeight20
@@ -102,5 +92,21 @@ class ComingSoonInfoCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String parseDateTime(String date) {
+    DateTime dateInFormat = DateTime.parse(date);
+
+    final dateFormatted = DateFormat.MMMMd().format(dateInFormat);
+
+    final splitedDate = dateFormatted.split(' ');
+
+    return "${splitedDate.first.substring(0, 3)} \n${splitedDate.last} ";
+  }
+
+  String getDayName(String date) {
+    DateTime dateInFormat = DateTime.parse(date);
+    final dayWeek = DateFormat('EEEE').format(dateInFormat);
+    return dayWeek;
   }
 }

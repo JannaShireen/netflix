@@ -51,7 +51,7 @@ class ScreenNewAndHot extends StatelessWidget {
                       text: "   🍿Coming Soon   ",
                     ),
                     Tab(
-                      text: "  👀 Everyone's watching  ",
+                      text: "  🔥Everyone's watching  ",
                     )
                   ]),
             )),
@@ -68,9 +68,19 @@ class ScreenNewAndHot extends StatelessWidget {
   }
 
   _buildEveryonesWatching() {
-    return ListView.builder(
-        itemCount: 5,
-        itemBuilder: (BuildContext context, index) =>
-            const EveryonesWatchingWidget());
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        kHeight20,
+        Text(
+          "🔥Everyone's watching",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        Expanded(child: EveryonesWatchingWidget()),
+      ],
+    );
   }
 }

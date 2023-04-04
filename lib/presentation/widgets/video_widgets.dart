@@ -3,20 +3,28 @@ import 'package:netflix_clone/core/colors/colors.dart';
 import 'package:netflix_clone/core/constants.dart';
 
 class VideoWidget extends StatelessWidget {
-  const VideoWidget({
+  VideoWidget({
     super.key,
+    this.videoImage,
   });
+  String? videoImage;
 
   @override
   Widget build(BuildContext context) {
+    print(videoImage);
     return Stack(
       children: [
         SizedBox(
           width: double.infinity,
           height: 200,
-          child: Image.network(
-            newAndHotTempImage,
-            fit: BoxFit.cover,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Image.network(
+              '${videoImage}',
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         Positioned(

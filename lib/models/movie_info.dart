@@ -47,7 +47,7 @@ class MovieInfoModel {
     data['popularity'] = popularity;
     data['release_date'] = releaseDate;
     data['video'] = video;
-    data['vote_average'] = voteAverage ;
+    data['vote_average'] = voteAverage;
     data['vote_count'];
 
     return data;
