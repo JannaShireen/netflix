@@ -22,34 +22,36 @@ class SearchIdleWidget extends StatelessWidget {
       children: [
         const SearchTextTitle(title: 'Top Searches'),
         kHeight,
-        FutureBuilder(
-            future: http.get(Uri.parse(
-                'https://api.themoviedb.org/3/trending/all/day?api_key=b2dee3b855c4ea705ff5dda3c0201768')),
-            builder: (context, AsyncSnapshot<http.Response> snapshot) {
-              if (!snapshot.hasData) {
-                return const Text('Please wait');
-              }
+        Expanded(
+          child: FutureBuilder(
+              future: http.get(Uri.parse(
+                  'https://api.themoviedb.org/3/trending/all/day?api_key=b2dee3b855c4ea705ff5dda3c0201768')),
+              builder: (context, AsyncSnapshot<http.Response> snapshot) {
+                if (!snapshot.hasData) {
+                  return const Text('Please wait');
+                }
 
-              if (snapshot.data == null) {
-                return const Text('No data found');
-              }
-              http.Response response = snapshot.data!;
-              if (response.statusCode == 200) {
-                Map<String, dynamic> data = jsonDecode(response.body);
-                TMDBApiResponseModel tmdbApiResponse =
-                    TMDBApiResponseModel.fromJson(data);
-                return ListView.separated(
-                    itemCount: tmdbApiResponse.results.length,
-                    separatorBuilder: ((context, index) => kHeight20),
-                    itemBuilder: (BuildContext context, int index) =>
-                        TopSearchItemTile(
-                            movieInfo: tmdbApiResponse.results[index]));
-              } else {
-                return const Center(
-                  child: Text('Sorry, something went wrong'),
-                );
-              }
-            }),
+                if (snapshot.data == null) {
+                  return const Text('No data found');
+                }
+                http.Response response = snapshot.data!;
+                if (response.statusCode == 200) {
+                  Map<String, dynamic> data = jsonDecode(response.body);
+                  TMDBApiResponseModel tmdbApiResponse =
+                      TMDBApiResponseModel.fromJson(data);
+                  return ListView.separated(
+                      itemCount: tmdbApiResponse.results.length,
+                      separatorBuilder: ((context, index) => kHeight20),
+                      itemBuilder: (BuildContext context, int index) =>
+                          TopSearchItemTile(
+                              movieInfo: tmdbApiResponse.results[index]));
+                } else {
+                  return const Center(
+                    child: Text('Sorry, something went wrong'),
+                  );
+                }
+              }),
+        ),
       ],
     );
   }
@@ -64,28 +66,25 @@ class TopSearchItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    String url = 'https://image.tmdb.org/t/p/w500/${movieInfo.posterPath}.jpg';
-    return Row(
-      children: [
-        Container(
-          width: screenWidth * 0.35,
+    String url =
+        'https://image.tmdb.org/t/p/w500${movieInfo.posterPath}?api_key=b2dee3b855c4ea705ff5dda3c0201768';
+    return ListTile(
+        leading: Container(
+          width: screenWidth * 0.17,
           height: 65,
           decoration: BoxDecoration(
               image:
                   DecorationImage(fit: BoxFit.cover, image: NetworkImage(url))),
         ),
-        kWidth,
-        Expanded(
-          child: Text(
-            movieInfo.title ?? 'No Movie Name Found',
-            style: const TextStyle(
-              color: kWhiteColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+        title: Text(
+          movieInfo.title ?? 'No Movie Name Found',
+          style: const TextStyle(
+            color: kWhiteColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
-        const CircleAvatar(
+        trailing: const CircleAvatar(
           backgroundColor: kWhiteColor,
           radius: 25,
           child: CircleAvatar(
@@ -98,8 +97,6 @@ class TopSearchItemTile extends StatelessWidget {
               ),
             ),
           ),
-        )
-      ],
-    );
+        ));
   }
 }

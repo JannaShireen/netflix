@@ -16,7 +16,7 @@ class _ScreenSearchState extends State<ScreenSearch> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
+    TextEditingController _searchController = TextEditingController();
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -25,10 +25,11 @@ class _ScreenSearchState extends State<ScreenSearch> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CupertinoSearchTextField(
-              controller: searchController,
+              controller: _searchController,
               onChanged: (value) {
                 setState(() {
                   query = value;
+                  // print(query);
                 });
               },
               backgroundColor: Colors.grey.withOpacity(0.4),
@@ -42,8 +43,15 @@ class _ScreenSearchState extends State<ScreenSearch> {
               ),
               style: const TextStyle(color: Colors.white),
             ),
-            Visibility(visible: query.isEmpty, child: SearchIdleWidget()),
-            Visibility(visible: query.isNotEmpty, child: SearchResultWidget()),
+            Expanded(
+              child: query.isEmpty
+                  ? SearchIdleWidget()
+                  : SearchResultWidget(
+                      apiQuery: query,
+                    ),
+            ),
+            //  Visibility(visible: query.isEmpty, child: SearchIdleWidget()),
+            // Visibility(visible: query.isNotEmpty, child: SearchResultWidget()),
           ],
         ),
       )),
