@@ -69,8 +69,8 @@ class ScreenHome extends StatelessWidget {
                                   children: [
                                     Image.network(
                                       'https://images.crowdspring.com/blog/wp-content/uploads/2016/06/27132348/netflix-new-logo.png',
-                                      width: 60,
-                                      height: 60,
+                                      width: 50,
+                                      height: 50,
                                     ),
                                     Spacer(),
                                     const Icon(
